@@ -20,11 +20,11 @@
     "url": "https://github.com/truffle-box/drizzle-box/issues"
   },
   "homepage": "https://github.com/truffle-box/drizzle-box#readme",
-  "dependencies": {
-    "@openzeppelin/contracts": "^2.4.0"
-  },
   "devDependencies": {
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.18"
+  },
+  "dependencies": {
+    "eth-gas-reporter": "^0.2.22"
   }
 }
