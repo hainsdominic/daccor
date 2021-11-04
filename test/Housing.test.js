@@ -43,7 +43,6 @@ contract('Housing', (accounts) => {
     await instance.payRent(id, { value: 5000, from: accounts[2] });
     const balanceAfter = await web3.eth.getBalance(accounts[1]);
     const expectedBalance = web3.utils.toBN(balanceBefore).add(web3.utils.toBN('5000'));
-    console.log(expectedBalance.toString() + ' ' + balanceAfter.toString());
     assert.deepEqual(expectedBalance.toString(), balanceAfter.toString());
   });
 });
