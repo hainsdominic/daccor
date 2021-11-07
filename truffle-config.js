@@ -17,8 +17,4 @@ module.exports = {
       network_id: '*',
     },
   },
-  mocha: {
-    reporter: 'eth-gas-reporter',
-    // timeout: 100000
-  },
 };
