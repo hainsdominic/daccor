@@ -2,8 +2,8 @@ import React from 'react';
 import { DrizzleContext } from '@drizzle/react-plugin';
 import { Drizzle } from '@drizzle/store';
 import drizzleOptions from './drizzleOptions';
-import MyComponent from './MyComponent';
-import './App.css';
+import Navbar from './components/Navbar';
+import NewLease from './components/NewLease';
 
 const drizzle = new Drizzle(drizzleOptions);
 
@@ -18,7 +18,12 @@ const App = () => {
             return 'Loading...';
           }
 
-          return <MyComponent drizzle={drizzle} drizzleState={drizzleState} />;
+          return (
+            <>
+              <Navbar />
+              <NewLease drizzle={drizzle} drizzleState={drizzleState} />
+            </>
+          );
         }}
       </DrizzleContext.Consumer>
     </DrizzleContext.Provider>
