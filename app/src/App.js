@@ -20,7 +20,7 @@ const App = () => {
 
           return (
             <>
-              <Navbar />
+              <Navbar drizzleState={drizzleState} />
               <NewLease drizzle={drizzle} drizzleState={drizzleState} />
             </>
           );

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = () => {
+const Navbar = ({ drizzleState }) => {
   const classes = useStyles();
 
   return (
@@ -31,6 +31,7 @@ const Navbar = () => {
           <Typography variant="h6" className={classes.title}>
             daccor
           </Typography>
+          <Typography variant="body2">Account: {drizzleState.accounts[0]}</Typography>
         </Toolbar>
       </AppBar>
     </div>

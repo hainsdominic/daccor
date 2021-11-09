@@ -137,7 +137,7 @@ const NewLease = ({ drizzle, drizzleState }) => {
                 </Grid>
                 <Grid item xs={12} className={classes.item}>
                   {pastEvents.length > 0 &&
-                    pastEvents.reverse().map(({ id, hash, rent }) => (
+                    pastEvents.map(({ id, hash, rent }) => (
                       <Paper elevation={3} className={classes.pastLease} key={id}>
                         <Typography variant="body1">ID: {id}</Typography>
                         <Typography variant="body1">Rent: {rent} wei</Typography>
