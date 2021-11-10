@@ -7,6 +7,7 @@ import drizzleOptions from './drizzleOptions';
 import Navbar from './components/Navbar';
 import NewLease from './components/NewLease';
 import PayLease from './components/PayLease';
+import ManageLeases from './components/ManageLeases';
 
 const drizzle = new Drizzle(drizzleOptions);
 
@@ -27,6 +28,7 @@ const App = () => {
               <Routes>
                 <Route exact path="/" element={<NewLease drizzle={drizzle} drizzleState={drizzleState} />} />
                 <Route exact path="/pay" element={<PayLease drizzle={drizzle} drizzleState={drizzleState} />} />
+                <Route exact path="/manage" element={<ManageLeases drizzle={drizzle} drizzleState={drizzleState} />} />
               </Routes>
             </Router>
           );

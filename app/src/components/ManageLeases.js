@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -31,42 +31,33 @@ const NewLease = ({ drizzle, drizzleState }) => {
   const classes = useStyles();
   const [pastEvents, setPastEvents] = useState([]);
 
-  useEffect(() => {
-    (async () => {
-      const web3 = drizzle.web3;
-      const contract = drizzle.contracts.Housing;
-      const yourContractWeb3 = new web3.eth.Contract(contract.abi, contract.address);
-
-      let fetchedEvents = await yourContractWeb3.getPastEvents('PaidRent', {
-        fromBlock: 0,
-      });
-
-      let parsedEvents = await Promise.all(
-        fetchedEvents
-          .filter((pastEvent) => pastEvent.returnValues.tenant === drizzleState.accounts[0])
-          .map(async ({ transactionHash, returnValues: { leaseId } }) => {
-            return {
-              leaseId,
-              transactionHash,
-            };
-          })
-      );
-
-      setPastEvents(parsedEvents);
-    })();
-    // eslint-disable-next-line
-  }, [drizzleState.contracts.Housing.events]);
-
   const formik = useFormik({
     initialValues: {
       leaseId: 0,
     },
     onSubmit: async ({ leaseId }) => {
       try {
-        const rent = await drizzle.contracts.Housing.methods.rent(leaseId).call();
-        const txid = await drizzle.contracts.Housing.methods.payRent(leaseId).send({ value: rent });
-        alert('The transaction has been dispatched successfully');
-        console.log(txid);
+        const web3 = drizzle.web3;
+        const contract = drizzle.contracts.Housing;
+        const yourContractWeb3 = new web3.eth.Contract(contract.abi, contract.address);
+
+        let fetchedEvents = await yourContractWeb3.getPastEvents('PaidRent', {
+          fromBlock: 0,
+        });
+
+        let parsedEvents = await Promise.all(
+          fetchedEvents
+            .filter((pastEvent) => pastEvent.returnValues.leaseId === leaseId.toString())
+            .map(async ({ transactionHash, returnValues: { leaseId, tenant } }) => {
+              return {
+                leaseId,
+                tenant,
+                transactionHash,
+              };
+            })
+        );
+
+        setPastEvents(parsedEvents);
       } catch (error) {
         alert('An error occured.');
       }
@@ -82,7 +73,7 @@ const NewLease = ({ drizzle, drizzleState }) => {
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12} className={classes.item}>
-                  <Typography variant="h5">Pay rent to a lease contract</Typography>
+                  <Typography variant="h5">List payments for a specific lease</Typography>
                 </Grid>
 
                 <form onSubmit={formik.handleSubmit}>
@@ -102,7 +93,7 @@ const NewLease = ({ drizzle, drizzleState }) => {
 
                   <Grid item xs={6} className={classes.item}>
                     <Button color="primary" variant="contained" fullWidth type="submit">
-                      Pay
+                      Submit
                     </Button>
                   </Grid>
                 </form>
@@ -111,13 +102,14 @@ const NewLease = ({ drizzle, drizzleState }) => {
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12} className={classes.item}>
-                  <Typography variant="h5">Your rent payments</Typography>
+                  <Typography variant="h5">Rent payments made</Typography>
                 </Grid>
                 <Grid item xs={12} className={classes.item}>
                   {pastEvents.length > 0 &&
-                    pastEvents.map(({ leaseId, transactionHash }) => (
+                    pastEvents.map(({ leaseId, tenant, transactionHash }) => (
                       <Paper elevation={3} className={classes.pastLease} key={transactionHash}>
                         <Typography variant="body1">ID: {leaseId}</Typography>
+                        <Typography variant="body1">Tenant Address: {tenant}</Typography>
                         <Typography variant="body2">Transaction Hash: {transactionHash}</Typography>
                       </Paper>
                     ))}

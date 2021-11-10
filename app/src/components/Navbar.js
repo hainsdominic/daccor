@@ -52,6 +52,9 @@ const Navbar = ({ drizzleState }) => {
             <MenuItem component={Link} to="/" onClick={handleClose}>
               New lease
             </MenuItem>
+            <MenuItem component={Link} to="/manage" onClick={handleClose}>
+              Manage Leases
+            </MenuItem>
             <MenuItem component={Link} to="/pay" onClick={handleClose}>
               Pay rent
             </MenuItem>
