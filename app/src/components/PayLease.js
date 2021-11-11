@@ -70,7 +70,7 @@ const NewLease = ({ drizzle, drizzleState }) => {
     onSubmit: async ({ leaseId }) => {
       try {
         const rent = await drizzle.contracts.Housing.methods.rent(leaseId).call();
-        const txid = await drizzle.contracts.Housing.methods.payRent(leaseId).send({ value: rent });
+        await drizzle.contracts.Housing.methods.payRent(leaseId).send({ value: rent });
         alert('The transaction has been dispatched successfully');
       } catch (error) {
         alert('An error occured.');

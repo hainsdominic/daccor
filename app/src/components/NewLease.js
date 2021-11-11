@@ -75,7 +75,7 @@ const NewLease = ({ drizzle, drizzleState }) => {
     onSubmit: async ({ rent }) => {
       try {
         const hash = crypto.createHash('sha256').update(buffer).digest('hex');
-        await drizzle.contracts.Housing.methods.newLease.cacheSend(drizzleState.accounts[0], hash, rent);
+        await drizzle.contracts.Housing.methods.newLease.cacheSend(drizzleState.accounts[0], hash, rent.toString());
       } catch (error) {
         alert('Please upload a lease contract');
       }
