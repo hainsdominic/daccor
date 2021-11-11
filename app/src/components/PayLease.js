@@ -8,6 +8,8 @@ import { useFormik } from 'formik';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import weiToUSD from '../utils/weiToUSD';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -45,9 +47,13 @@ const NewLease = ({ drizzle, drizzleState }) => {
         fetchedEvents
           .filter((pastEvent) => pastEvent.returnValues.tenant === drizzleState.accounts[0])
           .map(async ({ transactionHash, returnValues: { leaseId } }) => {
+            const rent = await drizzle.contracts.Housing.methods.rent(leaseId).call();
+            const rentUSD = await weiToUSD(rent);
             return {
               leaseId,
               transactionHash,
+              rent,
+              rentUSD,
             };
           })
       );
@@ -66,7 +72,6 @@ const NewLease = ({ drizzle, drizzleState }) => {
         const rent = await drizzle.contracts.Housing.methods.rent(leaseId).call();
         const txid = await drizzle.contracts.Housing.methods.payRent(leaseId).send({ value: rent });
         alert('The transaction has been dispatched successfully');
-        console.log(txid);
       } catch (error) {
         alert('An error occured.');
       }
@@ -115,9 +120,12 @@ const NewLease = ({ drizzle, drizzleState }) => {
                 </Grid>
                 <Grid item xs={12} className={classes.item}>
                   {pastEvents.length > 0 &&
-                    pastEvents.map(({ leaseId, transactionHash }) => (
+                    pastEvents.map(({ leaseId, transactionHash, rent, rentUSD }) => (
                       <Paper elevation={3} className={classes.pastLease} key={transactionHash}>
                         <Typography variant="body1">ID: {leaseId}</Typography>
+                        <Typography variant="body1">
+                          Rent: {rent} wei or {rentUSD}
+                        </Typography>
                         <Typography variant="body2">Transaction Hash: {transactionHash}</Typography>
                       </Paper>
                     ))}

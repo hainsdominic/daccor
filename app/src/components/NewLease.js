@@ -10,6 +10,8 @@ import TextField from '@material-ui/core/TextField';
 
 import crypto from 'crypto';
 
+import weiToUSD from '../utils/weiToUSD';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -50,11 +52,13 @@ const NewLease = ({ drizzle, drizzleState }) => {
           .map(async ({ returnValues: { leaseId } }) => {
             const rent = await drizzle.contracts.Housing.methods.rent(leaseId).call();
             const hash = await drizzle.contracts.Housing.methods.leaseHash(leaseId).call();
+            const rentUSD = await weiToUSD(rent);
 
             return {
               id: leaseId,
               rent,
               hash,
+              rentUSD,
             };
           })
       );
@@ -137,10 +141,12 @@ const NewLease = ({ drizzle, drizzleState }) => {
                 </Grid>
                 <Grid item xs={12} className={classes.item}>
                   {pastEvents.length > 0 &&
-                    pastEvents.map(({ id, hash, rent }) => (
+                    pastEvents.map(({ id, hash, rent, rentUSD }) => (
                       <Paper elevation={3} className={classes.pastLease} key={id}>
                         <Typography variant="body1">ID: {id}</Typography>
-                        <Typography variant="body1">Rent: {rent} wei</Typography>
+                        <Typography variant="body1">
+                          Rent: {rent} wei or {rentUSD}
+                        </Typography>
                         <Typography variant="body2">SHA256 Lease Hash: {hash}</Typography>
                       </Paper>
                     ))}
