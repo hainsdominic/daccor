@@ -8,6 +8,7 @@ import { useFormik } from 'formik';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import VerifyLease from './VerifyLease';
 import weiToUSD from '../utils/weiToUSD';
 
 const useStyles = makeStyles((theme) => ({
@@ -113,6 +114,7 @@ const NewLease = ({ drizzle, drizzleState }) => {
                 </form>
               </Paper>
             </Grid>
+            <VerifyLease drizzle={drizzle} drizzleState={drizzleState} />
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12} className={classes.item}>
