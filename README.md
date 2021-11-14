@@ -4,7 +4,7 @@
 
 ## _A decentralised solution for transparent and fair lease management_
 
-When a lease is signed, it is difficult to prevent forgery of the lease by any of the two parties. Special measures has to be taken such as making a copy of the signed lease. However, any of the two parties can be malicious during the process. This decentralized application focuses on providing a neutral and verifiable environment, obviously including the great tracability provided by the blockchain.
+When a lease is signed, it is difficult to prevent forgery of the lease by either party. Special measures such as making a copy of the signed lease must be taken. However, any of the two parties can be malicious during the process. This decentralized application focuses on providing a neutral and verifiable environment, including the great tracability provided by the blockchain.
 
 ## Features
 
@@ -41,7 +41,7 @@ npm install
 npm start
 ```
 
-Note that to have the best user experience, install metamask and connecting it to local network is ideal.
+To ensure the best user experience, install metamask. Connecting it to the local network is ideal.
 
 ## Team
 
