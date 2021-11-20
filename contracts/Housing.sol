@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 contract Housing {
-  Lease[] private leases;
+  Lease[] public leases;
 
   struct Lease {
     address owner;
@@ -24,6 +24,10 @@ contract Housing {
     (bool success, ) = payable(leases[_leaseId].owner).call{value: leases[_leaseId].rent}('');
     require(success, 'Transfer failed.');
     emit PaidRent(_leaseId, msg.sender);
+  }
+
+  function getLeases() public view returns (Lease[] memory) {
+    return leases;
   }
 
   function rent(uint256 _leaseId) external view validId(_leaseId) returns (uint256) {

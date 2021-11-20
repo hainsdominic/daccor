@@ -34,36 +34,28 @@ const useStyles = makeStyles((theme) => ({
 const NewLease = ({ drizzle, drizzleState }) => {
   const [buffer, setBuffer] = useState();
   const classes = useStyles();
-  const [pastEvents, setPastEvents] = useState([]);
+  const [currentVisitorLeases, setCurrentVisitorLeases] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const web3 = drizzle.web3;
-      const contract = drizzle.contracts.Housing;
-      const yourContractWeb3 = new web3.eth.Contract(contract.abi, contract.address);
+      const leasesList = await drizzle.contracts.Housing.methods.getLeases().call();
 
-      let fetchedEvents = await yourContractWeb3.getPastEvents('LeaseCreated', {
-        fromBlock: 0,
-      });
-
-      let parsedEvents = await Promise.all(
-        fetchedEvents
-          .filter((pastEvent) => pastEvent.returnValues.owner === drizzleState.accounts[0])
-          .map(async ({ returnValues: { leaseId } }) => {
-            const rent = await drizzle.contracts.Housing.methods.rent(leaseId).call();
-            const hash = await drizzle.contracts.Housing.methods.leaseHash(leaseId).call();
+      const currentLeases = await Promise.all(
+        leasesList
+          .filter((lease) => lease.owner === drizzleState.accounts[0])
+          .map(async ({ rent, leaseHash }, idx) => {
             const rentUSD = await weiToUSD(rent);
 
             return {
-              id: leaseId,
+              idx,
               rent,
-              hash,
+              leaseHash,
               rentUSD,
             };
           })
       );
 
-      setPastEvents(parsedEvents);
+      setCurrentVisitorLeases(currentLeases);
     })();
     // eslint-disable-next-line
   }, [drizzleState.contracts.Housing.events]);
@@ -140,14 +132,14 @@ const NewLease = ({ drizzle, drizzleState }) => {
                   <Typography variant="h5">Your leases</Typography>
                 </Grid>
                 <Grid item xs={12} className={classes.item}>
-                  {pastEvents.length > 0 &&
-                    pastEvents.map(({ id, hash, rent, rentUSD }) => (
-                      <Paper elevation={3} className={classes.pastLease} key={id}>
-                        <Typography variant="body1">ID: {id}</Typography>
+                  {currentVisitorLeases.length > 0 &&
+                    currentVisitorLeases.map(({ idx, leaseHash, rent, rentUSD }) => (
+                      <Paper elevation={3} className={classes.pastLease} key={idx}>
+                        <Typography variant="body1">ID: {idx}</Typography>
                         <Typography variant="body1">
                           Rent: {rent} wei or {rentUSD}
                         </Typography>
-                        <Typography variant="body2">SHA256 Lease Hash: {hash}</Typography>
+                        <Typography variant="body2">SHA256 Lease Hash: {leaseHash}</Typography>
                       </Paper>
                     ))}
                 </Grid>

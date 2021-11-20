@@ -47,7 +47,7 @@ const VerifyLease = ({ drizzle, drizzleState }) => {
           alert('The lease is NOT valid');
         }
       } catch (error) {
-        alert('Please upload a lease contract');
+        alert('The lease ID is invalid or you did not upload a file.');
       }
     },
   });
